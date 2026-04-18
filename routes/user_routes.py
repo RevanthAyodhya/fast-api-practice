@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter,Depends
 from models import User
-from database import SessionLocal
+from sqlalchemy.orm import Session
+from database import get_db
 from models import UserDB
 router=APIRouter(prefix="/users")
 # users=[]
@@ -46,33 +47,34 @@ router=APIRouter(prefix="/users")
 #     return users
 
 @router.post("/users")
-def create_user(user:User):
-    db=SessionLocal()
+def create_user(user:User,db:Session=Depends(get_db)):
+    # db=SessionLocal()
     db_user=UserDB(
         id=user.id,
         name=user.name,
         age=user.age
+        email=user.email
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    db.close()
+    # db.close()
     return db_user
 
 @router.get('/users')
-def get_users():
-    db=SessionLocal()
+def get_users(db:Session=Depends(get_db)):
+    # db=SessionLocal()
     users=db.query(UserDB).all()
-    db.close()
+    # db.close()
     return users
 
 @router.get("/users/{user_id}")
-def get_user(user_id: int):
-    db = SessionLocal()
+def get_user(user_id: int,db:Session=Depends(get_db)):
+    # db = SessionLocal()
 
     user = db.query(UserDB).filter(UserDB.id == user_id).first()
 
-    db.close()
+    # db.close()
 
     if not user:
         return {"error": "User not found"}
@@ -81,13 +83,13 @@ def get_user(user_id: int):
 
 
 @router.put("/users/{user_id}")
-def update_user(user_id: int, updated_user: User):
-    db = SessionLocal()
+def update_user(user_id: int, updated_user: User,db:Session=Depends(get_db)):
+    # db = SessionLocal()
 
     user = db.query(UserDB).filter(UserDB.id == user_id).first()
 
     if not user:
-        db.close()
+        # db.close()
         return {"error": "User not found"}
 
     user.name = updated_user.name
@@ -96,24 +98,24 @@ def update_user(user_id: int, updated_user: User):
     db.commit()
     db.refresh(user)
 
-    db.close()
+    # db.close()
 
     return user
 
 
 @router.delete("/users/{user_id}")
-def delete_user(user_id: int):
-    db = SessionLocal()
+def delete_user(user_id: int,db:Session=Depends(get_db)):
+    # db = SessionLocal()
 
     user = db.query(UserDB).filter(UserDB.id == user_id).first()
 
     if not user:
-        db.close()
+        # db.close()
         return {"error": "User not found"}
 
     db.delete(user)
     db.commit()
 
-    db.close()
+    # db.close()
 
     return {"message": "User deleted"}
