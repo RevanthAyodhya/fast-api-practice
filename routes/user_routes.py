@@ -46,13 +46,12 @@ router=APIRouter(prefix="/users")
 #     db.close()
 #     return users
 
-@router.post("/users")
+@router.post("/")
 def create_user(user:User,db:Session=Depends(get_db)):
     # db=SessionLocal()
     db_user=UserDB(
-        id=user.id,
         name=user.name,
-        age=user.age
+        age=user.age,
         email=user.email
     )
     db.add(db_user)
@@ -61,14 +60,14 @@ def create_user(user:User,db:Session=Depends(get_db)):
     # db.close()
     return db_user
 
-@router.get('/users')
+@router.get('/')
 def get_users(db:Session=Depends(get_db)):
     # db=SessionLocal()
     users=db.query(UserDB).all()
     # db.close()
     return users
 
-@router.get("/users/{user_id}")
+@router.get("/{user_id}")
 def get_user(user_id: int,db:Session=Depends(get_db)):
     # db = SessionLocal()
 
@@ -82,7 +81,7 @@ def get_user(user_id: int,db:Session=Depends(get_db)):
     return user
 
 
-@router.put("/users/{user_id}")
+@router.put("/{user_id}")
 def update_user(user_id: int, updated_user: User,db:Session=Depends(get_db)):
     # db = SessionLocal()
 
@@ -103,7 +102,7 @@ def update_user(user_id: int, updated_user: User,db:Session=Depends(get_db)):
     return user
 
 
-@router.delete("/users/{user_id}")
+@router.delete("/{user_id}")
 def delete_user(user_id: int,db:Session=Depends(get_db)):
     # db = SessionLocal()
 

@@ -1,9 +1,16 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 # from pydantic import BaseModel
 from routes.user_routes import router  as user_router
 from routes.product_routes import router as product_router
 app=FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # allow all (for now)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(user_router)
 app.include_router(product_router)
 
