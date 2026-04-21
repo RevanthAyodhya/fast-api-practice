@@ -11,9 +11,12 @@ class UserDB(Base):
     name = Column(String)
     age = Column(Integer)
     email=Column(String,nullable=False)
+    password = Column(String, nullable=False)
+    role = Column(String, default="user")
 
 
 class User(BaseModel):
     name: str
     age: int
-    email:str
+    email: str
+    password: str                                                                                                                    

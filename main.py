@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # from pydantic import BaseModel
 from routes.user_routes import router  as user_router
 from routes.product_routes import router as product_router
+from routes.auth_routes import router as auth_router
 app=FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -13,6 +14,7 @@ app.add_middleware(
 )
 app.include_router(user_router)
 app.include_router(product_router)
+app.include_router(auth_router)
 
 # class User(BaseModel):
 #     name:str
